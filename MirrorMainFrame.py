@@ -1,13 +1,24 @@
 from tkinter import *
-from datetime import date
+import DateAndTime
 
-class MirrorMainFrame:
-    def main():
-        window = Tk()
-        window.title("Smart Mirror")
-        window.attributes("-fullscreen", True)
-        window.mainloop()
+class MainFrame:
+    def __init__(self, master):
+        self.master = master
 
+        # create the date and time label
+        self.initDateAndTime()
+
+    # instantiate the time and date
+    def initDateAndTime(self):
+        DateAndTime.DateAndTime(self, root)
 
 if __name__ == "__main__":
-    MirrorMainFrame.main()
+    root = Tk()
+
+    root.title("Smart Mirror")
+    root.configure(bg="black")
+    root.attributes("-fullscreen", True)
+
+    MainFrame(root)
+
+    root.mainloop()
