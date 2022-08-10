@@ -11,7 +11,7 @@ class DateAndTime:
 
     # Returns the current date
     def getDate():
-        return date.today().strftime("%B %d, %Y")
+        return date.today().strftime("%A, %B %d, %Y")
 
     # Returns the current time
     def getTime():
@@ -26,5 +26,5 @@ class DateAndTime:
 
     # Updates the time and date label every half second
     def createUI(self):
-        clockLabel.configure(text=DateAndTime.getDate() + " " + DateAndTime.getTime())
+        clockLabel.configure(text=DateAndTime.getTime() + "\n" + DateAndTime.getDate())
         clockLabel.after(500, self.createUI)
