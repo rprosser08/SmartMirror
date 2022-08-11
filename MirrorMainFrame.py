@@ -1,5 +1,6 @@
 from tkinter import *
 import DateAndTime
+import Weather
 
 class MainFrame:
     def __init__(self, master):
@@ -7,6 +8,8 @@ class MainFrame:
 
         # create the date and time label
         self.initDateAndTime()
+
+        Weather.Weather.getLocation()
 
     # instantiate the time and date
     def initDateAndTime(self):
