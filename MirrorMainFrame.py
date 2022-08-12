@@ -1,6 +1,5 @@
 from tkinter import *
-import DateAndTime
-import Weather
+import DateAndTime, Weather
 
 class MainFrame:
     def __init__(self, master):
