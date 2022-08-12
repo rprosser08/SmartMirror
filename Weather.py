@@ -25,7 +25,6 @@ class Weather:
             "country_name": response.get("country_name"),
             "country_code": response.get("country_code")
         }
-        print(location)
         return location
 
     # TODO
