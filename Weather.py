@@ -7,7 +7,7 @@ class Weather:
         # self.getWeather()
         # self.createLabel(root)
      
-     # Returns the current computers IP Address
+    # Returns the current computers IP Address
     def getIP():
         response = requests.get("https://api64.ipify.org?format=json").json()
         return response["ip"]
