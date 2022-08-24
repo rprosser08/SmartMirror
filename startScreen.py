@@ -9,7 +9,7 @@ class StartWindow:
         StartWindow.createFrames()
         StartWindow.createLabels()
         StartWindow.createEntrys()
-        StartWindow.createSubmitButton()
+        StartWindow.createSubmitButton(self)
 
     def instantiateGrid():
         # Configures the columns for the grid for the window
@@ -69,15 +69,18 @@ class StartWindow:
         countryEntry = Entry(countryFrame, textvariable=countryString, bg="black", fg="white")
         countryEntry.pack()
 
-    def createSubmitButton():
+    def createSubmitButton(self):
         # Create the submit button
-        submitButton = Button(root, text="Submit", bg="black", fg="white", command=StartWindow.getUserData)
+        submitButton = Button(root, text="Submit", bg="black", fg="white", command=self.getUserData)
         submitButton.grid(row=9, column=1)
 
-    def getUserData():
+    def getUserData(self):
         print(cityString.get())
         print(stateString.get())
         print(countryString.get())
+        
+        #Close the start up window
+        root.destroy()
 
 
 if __name__ == "__main__":
