@@ -1,5 +1,5 @@
 from tkinter import *
-import tkinter
+import tkinter, MirrorMainFrame
 
 class StartWindow:
     def __init__(self, master):
@@ -75,13 +75,10 @@ class StartWindow:
         submitButton.grid(row=9, column=1)
 
     def getUserData(self):
-        print(cityString.get())
-        print(stateString.get())
-        print(countryString.get())
-        
         #Close the start up window
         root.destroy()
 
+        MirrorMainFrame.main(cityString.get(), stateString.get(), countryString.get())
 
 if __name__ == "__main__":
     root = Tk()
