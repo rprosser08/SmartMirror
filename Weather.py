@@ -1,4 +1,4 @@
-import requests, MirrorMainFrame
+import requests, MirrorMainFrame, re, urllib.request
 
 class Weather:
     def __init__(self, master, root):
@@ -29,7 +29,15 @@ class Weather:
 
 class WebScraper:
     def getURL():
-        print(MirrorMainFrame.MainFrame.getLocationData())
+        locationData = MirrorMainFrame.MainFrame.getLocationData()
+        URL = "https://www.wunderground.com/hourly/" + locationData["country"] + "/" + locationData["state"] + "/" + locationData["city"]
+
+        response = urllib.request.urlopen(URL)
+        html = response.read()
+        text = html.decode()
+
+        print(text)
+
     # TODO
     # Try use the geocoder to get me the hourly weather for my location
     # Create a web scraper in order to get the weather data
