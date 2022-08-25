@@ -15,9 +15,19 @@ class MainFrame:
         DateAndTime.DateAndTime(self, root)
 
     def setLocationData(cityString, stateString, countryString):
-        print(cityString)
-        print(stateString)
-        print(countryString)
+        global city, state, country
+        city = cityString
+        state = stateString
+        country = countryString
+
+    def getLocationData():
+        global city, state, country
+        locationData = {
+            "city": city,
+            "state": state,
+            "country": country
+        }
+        return locationData
 
 def main(cityString, stateString, countryString):
     global root
@@ -29,5 +39,6 @@ def main(cityString, stateString, countryString):
 
     MainFrame(root)
     MainFrame.setLocationData(cityString, stateString, countryString)
+    Weather.WebScraper.getURL()
 
     root.mainloop()
