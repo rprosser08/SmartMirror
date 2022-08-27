@@ -14,22 +14,25 @@ class MainFrame:
     def initDateAndTime(self):
         DateAndTime.DateAndTime(self, root)
 
-    def setLocationData(cityString, stateString, countryString):
-        global city, state, country
+    def setLocationData(cityString, stateString, zipString, countryString):
+        global city, state, zip, country
         city = cityString
         state = stateString
+        zip = zipString
         country = countryString
 
+
     def getLocationData():
-        global city, state, country
+        global city, state, zip, country
         locationData = {
             "city": city,
             "state": state,
+            "zip": zip,
             "country": country
         }
         return locationData
 
-def main(cityString, stateString, countryString):
+def main(cityString, stateString, zipString, countryString):
     global root
     root = Tk()
 
@@ -38,7 +41,7 @@ def main(cityString, stateString, countryString):
     root.attributes("-fullscreen", True)
 
     MainFrame(root)
-    MainFrame.setLocationData(cityString, stateString, countryString)
-    Weather.WebScraper.getURL()
+    MainFrame.setLocationData(cityString, stateString, zipString, countryString)
+    Weather.Weather.getWeather()
 
     root.mainloop()

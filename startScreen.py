@@ -21,7 +21,7 @@ class StartWindow:
             root.rowconfigure(y, weight=1)
 
     def createFrames():
-        global cityFrame, stateFrame, countryFrame
+        global cityFrame, stateFrame, zipFrame, countryFrame
 
         # Creates the city frame
         cityFrame = Frame(root)
@@ -30,6 +30,10 @@ class StartWindow:
         # Creates the state frame
         stateFrame = Frame(root)
         stateFrame.grid(row=7, column=1)
+
+        # Creates the zip code frame
+        zipFrame = Frame(root)
+        zipFrame.grid(row=7, column=2)
 
         # Creates the country frame
         countryFrame = Frame(root)
@@ -44,16 +48,21 @@ class StartWindow:
         stateLabel = Label(stateFrame, text="State Abbreviation:\t", bg="black", fg="white", font=("TkDefaultFont", 20))
         stateLabel.pack(side=LEFT)
 
+        # Zip label
+        zipLabel = Label(zipFrame, text="Zip Code:\t", bg="black", fg="white", font=("TkDefaultFont", 20))
+        zipLabel.pack(side=LEFT)
+
         # Country label
         countryLabel = Label(countryFrame, text="Country Abbreviation:\t", bg="black", fg="white", font=("TkDefaultFont", 20))
         countryLabel.pack(side=LEFT)
 
     def createEntrys():
-        global cityString, stateString, countryString
+        global cityString, stateString, zipString, countryString
 
         # varibles to store the user input strings
         cityString = tkinter.StringVar()
         stateString = tkinter.StringVar()
+        zipString = tkinter.StringVar()
         countryString = tkinter.StringVar()
 
         # City user text entry box
@@ -64,6 +73,10 @@ class StartWindow:
         # State user entry box
         stateEntry = Entry(stateFrame, textvariable=stateString, bg="black", fg="white")
         stateEntry.pack()
+
+        # Zip code user entry box
+        zipEntry = Entry(zipFrame, textvariable=zipString, bg="black", fg="white")
+        zipEntry.pack()
 
         # Country user entry box
         countryEntry = Entry(countryFrame, textvariable=countryString, bg="black", fg="white")
@@ -78,7 +91,8 @@ class StartWindow:
         #Close the start up window
         root.destroy()
 
-        MirrorMainFrame.main(cityString.get(), stateString.get(), countryString.get())
+        #Call the mirror main frame main function to start that tkinter window
+        MirrorMainFrame.main(cityString.get(), stateString.get(), zipString.get(), countryString.get())
 
 if __name__ == "__main__":
     root = Tk()

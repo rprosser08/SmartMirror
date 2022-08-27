@@ -1,44 +1,35 @@
-import requests, MirrorMainFrame, re, urllib.request
+import requests, MirrorMainFrame, re, urllib.request, json
+
 
 class Weather:
+    global apiKey, locationSet, key
+    # Fill in your own api key from accuweather 
+    apiKey = ""
+    locationSet = False
+
     def __init__(self, master, root):
         self.master = master
-        print(self.getLocation())
         # self.getWeather()
         # self.createLabel(root)
      
-    # Returns the current computers IP Address
-    def getIP():
-        response = requests.get("https://api64.ipify.org?format=json").json()
-        return response["ip"]
-
-    # Returns a map containing the computers IP Address, city, region name, region code, zip code, country name, and country code
     def getLocation():
-        ip = Weather.getIP()
-        response = requests.get(f"http://api.ipapi.com/{ip}?access_key=44ebfd0f3ed8b99deac20e713a8cc4da&format=1").json()
-        location = {
-            "ip": ip,
-            "city": response.get("city"),
-            "region_name":response.get("region_name"),
-            "region_code": response.get("region_code"),
-            "zip": response.get("zip"),
-            "country_name": response.get("country_name"),
-            "country_code": response.get("country_code")
-        }
-        return location
+        return MirrorMainFrame.MainFrame.getLocationData()
 
-class WebScraper:
-    def getURL():
-        locationData = MirrorMainFrame.MainFrame.getLocationData()
-        URL = "https://www.wunderground.com/hourly/" + locationData["country"] + "/" + locationData["state"] + "/" + locationData["city"]
+    def getLocationKey():
+        global apiKey, locationSet
+        location = Weather.getLocation()
+        zipCode = location["zip"]
+        URL = "http://dataservice.accuweather.com/locations/v1/postalcodes/US/search?apikey=" + apiKey + "&q=" + zipCode + "&language=en-us&details=true"
+        response = requests.get(URL)
+        json = response.json()
+        key = json[0]["Key"]
+        locationSet = True
+        return key
 
-        response = urllib.request.urlopen(URL)
-        html = response.read()
-        text = html.decode()
-
-        print(text)
-
-    # TODO
-    # Try use the geocoder to get me the hourly weather for my location
-    # Create a web scraper in order to get the weather data
-    # Put the weather data onto the screen
+    def getWeather():
+        global apiKey, key, locationSet
+        key = Weather.getLocationKey()
+        URL = "http://dataservice.accuweather.com/forecasts/v1/hourly/12hour/" + key + "?apikey=" + apiKey + "&language=en-us&details=true&metric=false"
+        response = requests.get(URL)
+        json = response.json()
+        print(json)
