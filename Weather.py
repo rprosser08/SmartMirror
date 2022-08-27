@@ -26,7 +26,7 @@ class Weather:
         locationSet = True
         return key
 
-    def getWeather():
+    def getHourlyWeather():
         global apiKey, key, locationSet
         key = Weather.getLocationKey()
         URL = "http://dataservice.accuweather.com/forecasts/v1/hourly/12hour/" + key + "?apikey=" + apiKey + "&language=en-us&details=true&metric=false"

@@ -42,6 +42,6 @@ def main(cityString, stateString, zipString, countryString):
 
     MainFrame(root)
     MainFrame.setLocationData(cityString, stateString, zipString, countryString)
-    Weather.Weather.getWeather()
+    Weather.Weather.getHourlyWeather()
 
     root.mainloop()
