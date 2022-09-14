@@ -3,8 +3,13 @@
 ## Project Description
 This code is for the GUI component of a smart mirror. It will include the current time and date, the hourly weather forecast (next 5 hours), and show the events on your calendar for the day. 
 
+## Instructions
+Once you clone this git repository you will need to set a couple of things up. Firstly, you will need to create a free account with Accuweather to use their API. Once you have recieved an API key you can enter it into the provided "APIKeyExample.txt" file, which you will want to rename to "APIKey.txt". 
+
+Finally, you will run the code from the startScreen.py file and enter in the data it requests on the start screen.
+
 ## TODO
-- Write the web scraper to get the weather forecast
-- Pull the weather data out of the scraped data
-- Get access to my calendar 
-- Formatting to make the appearance of the mirror look nice
+- Add the weather data to the GUI
+- Get access to calendars 
+- Put the calendar data onto the GUI
+- Reformat the mirror so the start screen and the mirror GUI look good
