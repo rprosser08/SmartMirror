@@ -9,7 +9,7 @@ Once you clone this git repository you will need to set a couple of things up. F
 Finally, you will run the code from the startScreen.py file and enter in the data it requests on the start screen.
 
 ## TODO
-- Add the weather data to the GUI
+- Add the weather data to the GUI [In Progress]
 - Get access to calendars 
 - Put the calendar data onto the GUI
 - Reformat the mirror so the start screen and the mirror GUI look good
