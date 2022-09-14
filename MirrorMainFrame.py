@@ -8,11 +8,15 @@ class MainFrame:
         # create the date and time label
         self.initDateAndTime()
 
-        # Weather.Weather.getLocation()
+        # create the weather label
+        self.initWeather()
 
     # instantiate the time and date
     def initDateAndTime(self):
         DateAndTime.DateAndTime(self, root)
+
+    def initWeather(self):
+        Weather.Weather(self, root)
 
     def setLocationData(cityString, stateString, zipString, countryString):
         global city, state, zip, country
@@ -40,8 +44,9 @@ def main(cityString, stateString, zipString, countryString):
     root.configure(bg="black")
     root.attributes("-fullscreen", True)
 
-    MainFrame(root)
+    # MainFrame(root)
     MainFrame.setLocationData(cityString, stateString, zipString, countryString)
-    Weather.Weather.getHourlyWeather()
+    MainFrame(root)
+    # Weather.Weather.getHourlyWeather()
 
     root.mainloop()

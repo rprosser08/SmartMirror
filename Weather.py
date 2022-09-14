@@ -1,5 +1,8 @@
 import requests, MirrorMainFrame, re, urllib.request, json
+from DateAndTime import DateAndTime
 from datetime import datetime
+from tkinter import *
+import tkinter
 
 
 class Weather:
@@ -8,15 +11,15 @@ class Weather:
 
     def __init__(self, master, root):
         self.master = master
-        # self.getWeather()
-        # self.createLabel(root)
+        self.createLabel(root)
+        self.createUI()
      
     def getLocation():
         return MirrorMainFrame.MainFrame.getLocationData()
 
     # Gets the location key from Accuweather needed to get the weather data for the location
-    def getLocationKey():
-        global apiKey, locationSet
+    def setLocationKey():
+        global apiKey, locationSet, key
         location = Weather.getLocation()
         zipCode = location["zip"]
         URL = "http://dataservice.accuweather.com/locations/v1/postalcodes/US/search?apikey=" + apiKey + "&q=" + zipCode + "&language=en-us&details=true"
@@ -30,12 +33,13 @@ class Weather:
     def getHourlyWeather():
         global apiKey, key, locationSet
         Weather.setAPIKey()
-        key = Weather.getLocationKey()
+        if not locationSet:
+            Weather.setLocationKey()
         URL = "http://dataservice.accuweather.com/forecasts/v1/hourly/12hour/" + key + "?apikey=" + apiKey + "&language=en-us&details=true&metric=false"
         response = requests.get(URL)
         weatherData = response.json()
         fiveHourData = Weather.formatData(weatherData)
-        print(fiveHourData)
+        return fiveHourData
 
     # Gets the Accuweahter API key from the file "APIKey.txt"
     def setAPIKey():
@@ -57,22 +61,37 @@ class Weather:
             FullTime = weatherTime.split("T")[1]
             _24HrTime = FullTime.split("-")[0]
             time_object = datetime.strptime(_24HrTime, "%H:%M:%S").time()
-            time = time_object.strftime("%I:%M %p")
+            time = time_object.strftime("%-I:%M %p")
             dataDictionary.update({"Time": time})
 
             # Gets the temperature from the weather data and stores it in the dictionary
-            temp = weatherDataList[i]["Temperature"]["Value"]
-            dataDictionary.update({"Temp": temp})
+            temp = int(weatherDataList[i]["Temperature"]["Value"])
+            dataDictionary.update({"Temp": str(temp)})
 
             # Gets the feels like temperature from the weather data and stores it in the dictionary
-            feelsTemp = weatherDataList[i]["RealFeelTemperature"]["Value"]
-            dataDictionary.update({"FeelsTemp": feelsTemp})
+            feelsTemp = int(weatherDataList[i]["RealFeelTemperature"]["Value"])
+            dataDictionary.update({"FeelsTemp": str(feelsTemp)})
 
             # Gets the chance of percipitation from the weather data and stores it in the dictionary
             precipChance = weatherDataList[i]["PrecipitationProbability"]
-            dataDictionary.update({"PrecipChance": precipChance})
+            dataDictionary.update({"PrecipChance": str(precipChance)})
 
             formattedData.append(dataDictionary)
         
         return formattedData
+
+    def createLabel(self, root):
+        global weatherLabel
+        weatherLabel = tkinter.Label(root, bg="black", fg="white", font=("Arial", 25))
+        weatherLabel.place(relx=1, rely=0, anchor=NE)
+        weatherLabel.after(0, self.createUI)
+
+    def createUI(self):
+        currentMinutes = DateAndTime.getMinutes()
+        degreeSymbol = "\u00B0"
+        if currentMinutes == "00" or not locationSet:
+            weatherData = Weather.getHourlyWeather()
+            print(weatherData)
+            weatherLabel.configure(text=weatherData[0]["Time"] + ":\tTemp " + weatherData[0]["Temp"] + degreeSymbol + "\n\t" + "Feels " + weatherData[0]["FeelsTemp"]+ degreeSymbol + "\n\t" + "Precip "  + weatherData[0]["PrecipChance"] + "%\n" + weatherData[1]["Time"] + "\n" + weatherData[2]["Time"] + "\n" + weatherData[3]["Time"] + "\n" + weatherData[4]["Time"])
+        weatherLabel.after(500, self.createUI)
 
