@@ -3,7 +3,6 @@ import requests, MirrorMainFrame, re, urllib.request, json
 
 class Weather:
     global apiKey, locationSet, key
-    # Fill in your own api key from accuweather 
     locationSet = False
 
     def __init__(self, master, root):
