@@ -4,7 +4,6 @@ import requests, MirrorMainFrame, re, urllib.request, json
 class Weather:
     global apiKey, locationSet, key
     # Fill in your own api key from accuweather 
-    apiKey = ""
     locationSet = False
 
     def __init__(self, master, root):
@@ -28,8 +27,14 @@ class Weather:
 
     def getHourlyWeather():
         global apiKey, key, locationSet
+        Weather.setAPIKey()
         key = Weather.getLocationKey()
         URL = "http://dataservice.accuweather.com/forecasts/v1/hourly/12hour/" + key + "?apikey=" + apiKey + "&language=en-us&details=true&metric=false"
         response = requests.get(URL)
         json = response.json()
         print(json)
+
+    def setAPIKey():
+        global apiKey
+        with open("APIKey.txt") as f:
+            apiKey = f.read()

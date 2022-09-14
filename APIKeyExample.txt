@@ -1,0 +1,1 @@
+Replace this line with your API key from Accuweather and rename this file to APIKey.txt
