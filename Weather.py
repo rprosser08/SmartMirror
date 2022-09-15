@@ -87,11 +87,11 @@ class Weather:
         weatherLabel.after(0, self.createUI)
 
     def createUI(self):
-        currentMinutes = DateAndTime.getMinutes()
+        currentMinutesAndSeconds = DateAndTime.getMinutesAndSeconds()
         degreeSymbol = "\u00B0"
-        if currentMinutes == "00" or not locationSet:
+        if currentMinutesAndSeconds == "00:00" or not locationSet:
             weatherData = Weather.getHourlyWeather()
             print(weatherData)
             weatherLabel.configure(text=weatherData[0]["Time"] + ":\tTemp " + weatherData[0]["Temp"] + degreeSymbol + "\n\t" + "Feels " + weatherData[0]["FeelsTemp"]+ degreeSymbol + "\n\t" + "Precip "  + weatherData[0]["PrecipChance"] + "%\n" + weatherData[1]["Time"] + "\n" + weatherData[2]["Time"] + "\n" + weatherData[3]["Time"] + "\n" + weatherData[4]["Time"])
-        weatherLabel.after(500, self.createUI)
+        weatherLabel.after(1000, self.createUI)
 

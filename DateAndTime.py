@@ -17,8 +17,8 @@ class DateAndTime:
     def getTime():
         return datetime.now().strftime("%-I:%M:%S %p")
 
-    def getMinutes():
-        return datetime.now().strftime("%M")
+    def getMinutesAndSeconds():
+        return datetime.now().strftime("%M:%S")
 
     # Creates the time and date label
     def createLabel(self, root):
