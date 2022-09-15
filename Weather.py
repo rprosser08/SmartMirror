@@ -80,6 +80,24 @@ class Weather:
         
         return formattedData
 
+    def formattedWweatherString():
+        degreeSymbol = "\u00B0"
+        weatherData = Weather.getHourlyWeather()
+        print(weatherData)
+        hour1 = weatherData[0]["Time"] + ":  Temp " + weatherData[0]["Temp"] + degreeSymbol + "\
+            \n\tFeels " + weatherData[0]["FeelsTemp"] + degreeSymbol + "\n\tPrecip " + weatherData[0]["PrecipChance"] + "%\n"
+        hour2 = weatherData[1]["Time"] + ":  Temp " + weatherData[1]["Temp"] + degreeSymbol + "\
+            \n\tFeels " + weatherData[1]["FeelsTemp"] + degreeSymbol + "\n\tPrecip " + weatherData[1]["PrecipChance"] + "%\n"
+        hour3 = weatherData[2]["Time"] + ":  Temp " + weatherData[2]["Temp"] + degreeSymbol + "\
+            \n\tFeels " + weatherData[2]["FeelsTemp"] + degreeSymbol + "\n\tPrecip " + weatherData[2]["PrecipChance"] + "%\n"
+        hour4 = weatherData[3]["Time"] + ":  Temp " + weatherData[3]["Temp"] + degreeSymbol + "\
+            \n\tFeels " + weatherData[3]["FeelsTemp"] + degreeSymbol + "\n\tPrecip " + weatherData[3]["PrecipChance"] + "%\n"
+        hour5 = weatherData[4]["Time"] + ":  Temp " + weatherData[4]["Temp"] + degreeSymbol + "\
+            \n\tFeels " + weatherData[4]["FeelsTemp"] + degreeSymbol + "\n\tPrecip " + weatherData[4]["PrecipChance"] + "%\n"
+        
+        retVal = hour1 + hour2 + hour3 + hour4 + hour5
+        return retVal
+
     def createLabel(self, root):
         global weatherLabel
         weatherLabel = tkinter.Label(root, bg="black", fg="white", font=("Arial", 25))
@@ -88,10 +106,7 @@ class Weather:
 
     def createUI(self):
         currentMinutesAndSeconds = DateAndTime.getMinutesAndSeconds()
-        degreeSymbol = "\u00B0"
         if currentMinutesAndSeconds == "00:00" or not locationSet:
-            weatherData = Weather.getHourlyWeather()
-            print(weatherData)
-            weatherLabel.configure(text=weatherData[0]["Time"] + ":\tTemp " + weatherData[0]["Temp"] + degreeSymbol + "\n\t" + "Feels " + weatherData[0]["FeelsTemp"]+ degreeSymbol + "\n\t" + "Precip "  + weatherData[0]["PrecipChance"] + "%\n" + weatherData[1]["Time"] + "\n" + weatherData[2]["Time"] + "\n" + weatherData[3]["Time"] + "\n" + weatherData[4]["Time"])
+            weatherLabel.configure(text=Weather.formattedWweatherString())
         weatherLabel.after(1000, self.createUI)
 
