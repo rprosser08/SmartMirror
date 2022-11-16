@@ -6,8 +6,9 @@ import tkinter
 
 
 class Weather:
-    global apiKey, locationSet, key
+    global apiKey, locationSet, key, counter
     locationSet = False
+    counter = 0
 
     def __init__(self, master, root):
         self.master = master
@@ -38,6 +39,7 @@ class Weather:
         URL = "http://dataservice.accuweather.com/forecasts/v1/hourly/12hour/" + key + "?apikey=" + apiKey + "&language=en-us&details=true&metric=false"
         response = requests.get(URL)
         weatherData = response.json()
+        print(weatherData)
         fiveHourData = Weather.formatData(weatherData)
         return fiveHourData
 
@@ -105,8 +107,12 @@ class Weather:
         weatherLabel.after(0, self.createUI)
 
     def createUI(self):
+        global counter
         currentMinutesAndSeconds = DateAndTime.getMinutesAndSeconds()
-        if currentMinutesAndSeconds == "00:00" or not locationSet:
+        if (currentMinutesAndSeconds == "00:00" and counter == 0) or not locationSet:
             weatherLabel.configure(text=Weather.formattedWweatherString())
+            counter += 1
+        if currentMinutesAndSeconds == "00:05":
+            counter = 0
         weatherLabel.after(1000, self.createUI)
 

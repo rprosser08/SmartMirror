@@ -18,25 +18,19 @@ class MainFrame:
     def initWeather(self):
         Weather.Weather(self, root)
 
-    def setLocationData(cityString, stateString, zipString, countryString):
-        global city, state, zip, country
-        city = cityString
-        state = stateString
+    def setLocationData(zipString):
+        global zip
         zip = zipString
-        country = countryString
 
 
     def getLocationData():
-        global city, state, zip, country
+        global zip
         locationData = {
-            "city": city,
-            "state": state,
-            "zip": zip,
-            "country": country
+            "zip": zip
         }
         return locationData
 
-def main(cityString, stateString, zipString, countryString):
+def main(zipString):
     global root
     root = Tk()
 
@@ -45,7 +39,7 @@ def main(cityString, stateString, zipString, countryString):
     root.attributes("-fullscreen", True)
 
     # MainFrame(root)
-    MainFrame.setLocationData(cityString, stateString, zipString, countryString)
+    MainFrame.setLocationData(zipString)
     MainFrame(root)
     # Weather.Weather.getHourlyWeather()
 

@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import ttk
 import tkinter, MirrorMainFrame
 
 class StartWindow:
@@ -17,82 +18,42 @@ class StartWindow:
             root.columnconfigure(x, weight=1)
         
         # Configures the rows for the grid for the window
-        for y in range(15):
+        for y in range(3):
             root.rowconfigure(y, weight=1)
 
     def createFrames():
-        global cityFrame, stateFrame, zipFrame, countryFrame
-
-        # Creates the city frame
-        cityFrame = Frame(root)
-        cityFrame.grid(row=6, column=1)
-
-        # Creates the state frame
-        stateFrame = Frame(root)
-        stateFrame.grid(row=7, column=1)
+        global zipFrame
 
         # Creates the zip code frame
         zipFrame = Frame(root)
-        zipFrame.grid(row=7, column=2)
+        zipFrame.grid(row=1, column=1)
 
-        # Creates the country frame
-        countryFrame = Frame(root)
-        countryFrame.grid(row=8, column=1)
-        
     def createLabels():
-        # City label
-        cityLabel = Label(cityFrame, text="City:\t\t", bg="black", fg="white", font=("TkDefaultFont", 20))
-        cityLabel.pack(side=LEFT)
-
-        # State label
-        stateLabel = Label(stateFrame, text="State Abbreviation:\t", bg="black", fg="white", font=("TkDefaultFont", 20))
-        stateLabel.pack(side=LEFT)
-
         # Zip label
-        zipLabel = Label(zipFrame, text="Zip Code:\t", bg="black", fg="white", font=("TkDefaultFont", 20))
+        zipLabel = Label(zipFrame, text="Please Enter Your Zip Code: ", bg="black", fg="white", font=("TkDefaultFont", 20))
         zipLabel.pack(side=LEFT)
 
-        # Country label
-        countryLabel = Label(countryFrame, text="Country Abbreviation:\t", bg="black", fg="white", font=("TkDefaultFont", 20))
-        countryLabel.pack(side=LEFT)
-
     def createEntrys():
-        global cityString, stateString, zipString, countryString
+        global zipString
 
-        # varibles to store the user input strings
-        cityString = tkinter.StringVar()
-        stateString = tkinter.StringVar()
         zipString = tkinter.StringVar()
-        countryString = tkinter.StringVar()
-
-        # City user text entry box
-        cityEntry = Entry(cityFrame, textvariable=cityString, bg="black", fg="white")
-        cityEntry.pack()
-        cityEntry.focus()
-
-        # State user entry box
-        stateEntry = Entry(stateFrame, textvariable=stateString, bg="black", fg="white")
-        stateEntry.pack()
 
         # Zip code user entry box
         zipEntry = Entry(zipFrame, textvariable=zipString, bg="black", fg="white")
         zipEntry.pack()
 
-        # Country user entry box
-        countryEntry = Entry(countryFrame, textvariable=countryString, bg="black", fg="white")
-        countryEntry.pack()
-
     def createSubmitButton(self):
         # Create the submit button
-        submitButton = Button(root, text="Submit", bg="black", fg="white", command=self.getUserData)
-        submitButton.grid(row=9, column=1)
+        # submitButton = Button(root, text="Submit", bg="black", fg="white", command=self.getUserData)
+        submitButton = ttk.Button(root, text="Submit", command=self.getUserData)
+        submitButton.grid(row=1, column=2)
 
     def getUserData(self):
         #Close the start up window
         root.destroy()
 
         #Call the mirror main frame main function to start that tkinter window
-        MirrorMainFrame.main(cityString.get(), stateString.get(), zipString.get(), countryString.get())
+        MirrorMainFrame.main(zipString.get())
 
 if __name__ == "__main__":
     root = Tk()
