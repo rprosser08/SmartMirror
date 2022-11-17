@@ -36,11 +36,13 @@ class Weather:
         Weather.setAPIKey()
         if not locationSet:
             Weather.setLocationKey()
-        URL = "http://dataservice.accuweather.com/forecasts/v1/hourly/12hour/" + key + "?apikey=" + apiKey + "&language=en-us&details=true&metric=false"
+        # Remove details and change feels like temp to "Icon Phrase" -> details doesn't always seem to update the api information on time
+        # URL = "http://dataservice.accuweather.com/forecasts/v1/hourly/12hour/" + key + "?apikey=" + apiKey + "&details=true"
+        URL = "http://dataservice.accuweather.com/forecasts/v1/hourly/12hour/" + key + "?apikey=" + apiKey
         response = requests.get(URL)
         weatherData = response.json()
-        print(weatherData)
         fiveHourData = Weather.formatData(weatherData)
+        print(fiveHourData)
         return fiveHourData
 
     # Gets the Accuweahter API key from the file "APIKey.txt"
@@ -70,9 +72,9 @@ class Weather:
             temp = int(weatherDataList[i]["Temperature"]["Value"])
             dataDictionary.update({"Temp": str(temp)})
 
-            # Gets the feels like temperature from the weather data and stores it in the dictionary
-            feelsTemp = int(weatherDataList[i]["RealFeelTemperature"]["Value"])
-            dataDictionary.update({"FeelsTemp": str(feelsTemp)})
+            # Gets the Icon Phrase that describes the weather
+            iconPhrase = weatherDataList[i]["IconPhrase"]
+            dataDictionary.update({"IconPhrase": str(iconPhrase)})
 
             # Gets the chance of percipitation from the weather data and stores it in the dictionary
             precipChance = weatherDataList[i]["PrecipitationProbability"]
@@ -82,20 +84,19 @@ class Weather:
         
         return formattedData
 
-    def formattedWweatherString():
+    def formattedWweatherString(): # Need to edit to not use Feels Temp Anymore -> Can format with temp \n Icon Phrase + with a x% chance of percipitation? 
         degreeSymbol = "\u00B0"
         weatherData = Weather.getHourlyWeather()
-        print(weatherData)
-        hour1 = weatherData[0]["Time"] + ":  Temp " + weatherData[0]["Temp"] + degreeSymbol + "\
-            \n\tFeels " + weatherData[0]["FeelsTemp"] + degreeSymbol + "\n\tPrecip " + weatherData[0]["PrecipChance"] + "%\n"
-        hour2 = weatherData[1]["Time"] + ":  Temp " + weatherData[1]["Temp"] + degreeSymbol + "\
-            \n\tFeels " + weatherData[1]["FeelsTemp"] + degreeSymbol + "\n\tPrecip " + weatherData[1]["PrecipChance"] + "%\n"
-        hour3 = weatherData[2]["Time"] + ":  Temp " + weatherData[2]["Temp"] + degreeSymbol + "\
-            \n\tFeels " + weatherData[2]["FeelsTemp"] + degreeSymbol + "\n\tPrecip " + weatherData[2]["PrecipChance"] + "%\n"
-        hour4 = weatherData[3]["Time"] + ":  Temp " + weatherData[3]["Temp"] + degreeSymbol + "\
-            \n\tFeels " + weatherData[3]["FeelsTemp"] + degreeSymbol + "\n\tPrecip " + weatherData[3]["PrecipChance"] + "%\n"
-        hour5 = weatherData[4]["Time"] + ":  Temp " + weatherData[4]["Temp"] + degreeSymbol + "\
-            \n\tFeels " + weatherData[4]["FeelsTemp"] + degreeSymbol + "\n\tPrecip " + weatherData[4]["PrecipChance"] + "%\n"
+        hour1 = weatherData[0]["Time"] + ":  Temp " + weatherData[0]["Temp"] + degreeSymbol + "F\
+            \n\t" + weatherData[0]["IconPhrase"] + "\n\tPrecip " + weatherData[0]["PrecipChance"] + "%\n"
+        hour2 = weatherData[1]["Time"] + ":  Temp " + weatherData[1]["Temp"] + degreeSymbol + "F\
+            \n\t" + weatherData[1]["IconPhrase"] + "\n\tPrecip " + weatherData[1]["PrecipChance"] + "%\n"
+        hour3 = weatherData[2]["Time"] + ":  Temp " + weatherData[2]["Temp"] + degreeSymbol + "F\
+            \n\t" + weatherData[2]["IconPhrase"] + "\n\tPrecip " + weatherData[2]["PrecipChance"] + "%\n"
+        hour4 = weatherData[3]["Time"] + ":  Temp " + weatherData[3]["Temp"] + degreeSymbol + "F\
+            \n\t" + weatherData[3]["IconPhrase"] + "\n\tPrecip " + weatherData[3]["PrecipChance"] + "%\n"
+        hour5 = weatherData[4]["Time"] + ":  Temp " + weatherData[4]["Temp"] + degreeSymbol + "F\
+            \n\t" + weatherData[4]["IconPhrase"] + "\n\tPrecip " + weatherData[4]["PrecipChance"] + "%\n"
         
         retVal = hour1 + hour2 + hour3 + hour4 + hour5
         return retVal
@@ -112,7 +113,7 @@ class Weather:
         if (currentMinutesAndSeconds == "00:00" and counter == 0) or not locationSet:
             weatherLabel.configure(text=Weather.formattedWweatherString())
             counter += 1
-        if currentMinutesAndSeconds == "00:05":
+        if currentMinutesAndSeconds != "00:00" and counter == 1:
             counter = 0
         weatherLabel.after(1000, self.createUI)
 
