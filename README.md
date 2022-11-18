@@ -1,4 +1,4 @@
-# SmartMirror_v2
+# SmartMirror
 
 ## Project Description
 This code is for the GUI component of a smart mirror. It will include the current time and date, and the hourly weather forecast (next 5 hours).
