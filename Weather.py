@@ -25,6 +25,7 @@ class Weather:
         zipCode = location["zip"]
         URL = "http://dataservice.accuweather.com/locations/v1/postalcodes/US/search?apikey=" + apiKey + "&q=" + zipCode + "&language=en-us&details=true"
         response = requests.get(URL)
+        print(response)
         json = response.json()
         key = json[0]["Key"]
         locationSet = True
@@ -40,6 +41,7 @@ class Weather:
         # URL = "http://dataservice.accuweather.com/forecasts/v1/hourly/12hour/" + key + "?apikey=" + apiKey + "&details=true"
         URL = "http://dataservice.accuweather.com/forecasts/v1/hourly/12hour/" + key + "?apikey=" + apiKey
         response = requests.get(URL)
+        print(response)
         weatherData = response.json()
         fiveHourData = Weather.formatData(weatherData)
         print(fiveHourData)
@@ -84,18 +86,18 @@ class Weather:
         
         return formattedData
 
-    def formattedWweatherString(): # Need to edit to not use Feels Temp Anymore -> Can format with temp \n Icon Phrase + with a x% chance of percipitation? 
+    def formattedWweatherString():
         degreeSymbol = "\u00B0"
         weatherData = Weather.getHourlyWeather()
-        hour1 = weatherData[0]["Time"] + ":  Temp " + weatherData[0]["Temp"] + degreeSymbol + "F\
+        hour1 = "\t" + weatherData[0]["Time"] + ": Temp " + weatherData[0]["Temp"] + degreeSymbol + "F\
             \n\t" + weatherData[0]["IconPhrase"] + "\n\tPrecip " + weatherData[0]["PrecipChance"] + "%\n"
-        hour2 = weatherData[1]["Time"] + ":  Temp " + weatherData[1]["Temp"] + degreeSymbol + "F\
+        hour2 = "\t" + weatherData[1]["Time"] + ": Temp " + weatherData[1]["Temp"] + degreeSymbol + "F\
             \n\t" + weatherData[1]["IconPhrase"] + "\n\tPrecip " + weatherData[1]["PrecipChance"] + "%\n"
-        hour3 = weatherData[2]["Time"] + ":  Temp " + weatherData[2]["Temp"] + degreeSymbol + "F\
+        hour3 = "\t" + weatherData[2]["Time"] + ": Temp " + weatherData[2]["Temp"] + degreeSymbol + "F\
             \n\t" + weatherData[2]["IconPhrase"] + "\n\tPrecip " + weatherData[2]["PrecipChance"] + "%\n"
-        hour4 = weatherData[3]["Time"] + ":  Temp " + weatherData[3]["Temp"] + degreeSymbol + "F\
+        hour4 = "\t" + weatherData[3]["Time"] + ": Temp " + weatherData[3]["Temp"] + degreeSymbol + "F\
             \n\t" + weatherData[3]["IconPhrase"] + "\n\tPrecip " + weatherData[3]["PrecipChance"] + "%\n"
-        hour5 = weatherData[4]["Time"] + ":  Temp " + weatherData[4]["Temp"] + degreeSymbol + "F\
+        hour5 = "\t" + weatherData[4]["Time"] + ": Temp " + weatherData[4]["Temp"] + degreeSymbol + "F\
             \n\t" + weatherData[4]["IconPhrase"] + "\n\tPrecip " + weatherData[4]["PrecipChance"] + "%\n"
         
         retVal = hour1 + hour2 + hour3 + hour4 + hour5
@@ -104,7 +106,7 @@ class Weather:
     def createLabel(self, root):
         global weatherLabel
         weatherLabel = tkinter.Label(root, bg="black", fg="white", font=("Arial", 25))
-        weatherLabel.place(relx=1, rely=0, anchor=NE)
+        weatherLabel.place(relx=1.0, rely=0.0, anchor=NE)
         weatherLabel.after(0, self.createUI)
 
     def createUI(self):

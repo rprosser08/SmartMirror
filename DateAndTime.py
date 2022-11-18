@@ -29,5 +29,5 @@ class DateAndTime:
 
     # Updates the time and date label every half second
     def createUI(self):
-        clockLabel.configure(text=DateAndTime.getTime() + "\n" + DateAndTime.getDate())
+        clockLabel.configure(text=DateAndTime.getDate() + "\n" + DateAndTime.getTime())
         clockLabel.after(500, self.createUI)
