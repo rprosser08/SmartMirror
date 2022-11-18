@@ -35,15 +35,11 @@ class Weather:
         global apiKey, key, locationSet
         Weather.setAPIKey()
         if not locationSet:
-            print("SET LOCATION")
             Weather.setLocationKey()
         URL = "http://dataservice.accuweather.com/forecasts/v1/hourly/12hour/" + key + "?apikey=" + apiKey
         response = requests.get(URL)
         weatherData = response.json()
-        print(weatherData)
         fiveHourData = Weather.formatData(weatherData)
-        print(fiveHourData)
-        print("\n\n")
         return fiveHourData
 
     # Gets the Accuweahter API key from the file "APIKey.txt"
@@ -111,10 +107,10 @@ class Weather:
     def createUI(self):
         global counter
         currentMinutesAndSeconds = DateAndTime.getMinutesAndSeconds()
-        if (currentMinutesAndSeconds == "00:00" and counter == 0) or not locationSet:
+        if (currentMinutesAndSeconds == "00:10" and counter == 0) or not locationSet:
             weatherLabel.configure(text=Weather.formattedWweatherString())
             counter += 1
-        if currentMinutesAndSeconds != "00:00" and counter == 1:
+        if currentMinutesAndSeconds != "00:10" and counter == 1:
             counter = 0
         weatherLabel.after(1000, self.createUI)
 
