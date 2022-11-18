@@ -41,10 +41,8 @@ class Weather:
         # URL = "http://dataservice.accuweather.com/forecasts/v1/hourly/12hour/" + key + "?apikey=" + apiKey + "&details=true"
         URL = "http://dataservice.accuweather.com/forecasts/v1/hourly/12hour/" + key + "?apikey=" + apiKey
         response = requests.get(URL)
-        print(response)
         weatherData = response.json()
         fiveHourData = Weather.formatData(weatherData)
-        print(fiveHourData)
         return fiveHourData
 
     # Gets the Accuweahter API key from the file "APIKey.txt"
