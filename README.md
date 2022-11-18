@@ -10,4 +10,3 @@ Finally, you will run the code from the startScreen.py file and enter in your zi
 
 ## TODO
 - Formatting the user screens
-- Looking into a bug where the weather API doesn't send the updated data
