@@ -15,7 +15,7 @@ class DateAndTime:
 
     # Returns the current time
     def getTime():
-        return datetime.now().strftime("%-I:%M:%S %p")
+        return datetime.now().strftime("%-I:%M %p")
 
     def getMinutesAndSeconds():
         return datetime.now().strftime("%M:%S")
