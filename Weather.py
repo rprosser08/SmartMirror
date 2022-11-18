@@ -25,7 +25,6 @@ class Weather:
         zipCode = location["zip"]
         URL = "http://dataservice.accuweather.com/locations/v1/postalcodes/US/search?apikey=" + apiKey + "&q=" + zipCode + "&language=en-us&details=true"
         response = requests.get(URL)
-        print(response)
         json = response.json()
         key = json[0]["Key"]
         locationSet = True
@@ -36,13 +35,15 @@ class Weather:
         global apiKey, key, locationSet
         Weather.setAPIKey()
         if not locationSet:
+            print("SET LOCATION")
             Weather.setLocationKey()
-        # Remove details and change feels like temp to "Icon Phrase" -> details doesn't always seem to update the api information on time
-        # URL = "http://dataservice.accuweather.com/forecasts/v1/hourly/12hour/" + key + "?apikey=" + apiKey + "&details=true"
         URL = "http://dataservice.accuweather.com/forecasts/v1/hourly/12hour/" + key + "?apikey=" + apiKey
         response = requests.get(URL)
         weatherData = response.json()
+        print(weatherData)
         fiveHourData = Weather.formatData(weatherData)
+        print(fiveHourData)
+        print("\n\n")
         return fiveHourData
 
     # Gets the Accuweahter API key from the file "APIKey.txt"
