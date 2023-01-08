@@ -26,9 +26,17 @@ class Weather:
         URL = "http://dataservice.accuweather.com/locations/v1/postalcodes/US/search?apikey=" + apiKey + "&q=" + zipCode + "&language=en-us&details=true"
         response = requests.get(URL)
         json = response.json()
+        print(json)
         key = json[0]["Key"]
         locationSet = True
         return key
+
+    # Returns the city, state, zip code, and country code where the weather data is from
+    def get_users_location(location_data):
+        location_name = location_data[0]['LocalizedName']
+        location_state = location_data[0]['AdministrativeArea']['ID']
+        location_zip = location_data[0]['PrimaryPostalCode']
+        location_country = location_data[0]['AdministrativeArea']['CountryID']
 
     # Gets the 12 - hourly weather data for the location 
     def getHourlyWeather():
@@ -104,13 +112,14 @@ class Weather:
         weatherLabel.place(relx=1.0, rely=0.0, anchor=NE)
         weatherLabel.after(0, self.createUI)
 
+# NEED TO LOOK INTO WHY THIS DOESN'T UPDATE
     def createUI(self):
         global counter
         currentMinutesAndSeconds = DateAndTime.getMinutesAndSeconds()
-        if (currentMinutesAndSeconds == "00:10" and counter == 0) or not locationSet:
+        if (currentMinutesAndSeconds == "01:00" and counter == 0) or not locationSet:
             weatherLabel.configure(text=Weather.formattedWweatherString())
             counter += 1
-        if currentMinutesAndSeconds != "00:10" and counter == 1:
+        if currentMinutesAndSeconds != "01:00" and counter == 1:
             counter = 0
         weatherLabel.after(1000, self.createUI)
 
