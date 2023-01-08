@@ -10,3 +10,6 @@ Finally, you will run the code from the startScreen.py file and enter in your zi
 
 ## TODO
 - Formatting the user screens
+
+## References
+Code for the calendar was taken and modified from https://developers.google.com/calendar/api/quickstart/python 
