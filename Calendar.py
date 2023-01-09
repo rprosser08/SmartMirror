@@ -9,10 +9,22 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
-# CODE TAKEN AND MODIFIED FROM https://developers.google.com/calendar/api/quickstart/python
+from tkinter import *
+import tkinter
+
+from DateAndTime import DateAndTime
+
+# CODE IN MAIN FUNCTION TAKEN AND MODIFIED FROM https://developers.google.com/calendar/api/quickstart/python
 class Calendar:
     # If modifying these scopes, delete the file token.json.
     SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
+    COUNTER = -1
+
+    def __init__(self, master, root):
+        self.master = master
+        self.createLabel(root)
+        self.createUI()
+
 
     def main():
         creds = None
@@ -41,33 +53,75 @@ class Calendar:
             end_of_day = Calendar.get_end_of_day()
             events_result = service.events().list(calendarId='primary', timeMin=current_day, timeMax=end_of_day, singleEvents=True, orderBy='startTime').execute()
             events = events_result.get('items', [])
-            print(events)
 
+            ret_val = []
             if not events:
                 print('No upcoming events found.')
-                return
+                return ret_val
 
             # Prints the start and name of the events
             for event in events:
                 start = event['start'].get('dateTime', event['start'].get('date'))
                 end = event['end'].get('dateTime', event['end'].get('date'))
-                print(start, end, event['summary'])
+                print([start, end, event['summary']])
+                ret_val.append([start, end, event['summary']])
+
+            return ret_val
 
         except HttpError as error:
             print('An error occurred: %s' % error)
 
-    
+
+    # Returns the local midnight time in UTC time 
     def get_end_of_day():
         current_time = datetime.datetime.now()
         tomorrow = current_time + datetime.timedelta(days=1)
         # Calculates how many seconds are until midnight
         seconds_until_midnight = (datetime.datetime.combine(tomorrow, datetime.time.min) - current_time).seconds
-        # Returns the UTC time for local midnight time
         return ((datetime.datetime.utcnow() + datetime.timedelta(seconds=seconds_until_midnight)).isoformat() + 'Z')
 
 
-if __name__ == '__main__':
-    Calendar.main()
+    def time_converter(date_time_string):
+        start_dt = date_time_string.split('T')
+        start_time = start_dt[1].split('-')[0]
+        d = datetime.datetime.strptime(start_time, "%H:%M:%S")
+        return d.strftime("%-I:%M %p")
+
+
+    # Formats the event data
+    def formatted_data():
+        ret_val = "Your Schedule\n"
+        events_data = Calendar.main()
+        
+        if len(events_data) == 0:
+            return ""
+        
+        for event in events_data:
+            start_time = str(Calendar.time_converter(event[0]))
+            end_time = str(Calendar.time_converter(event[1]))
+            event_name = event[2]
+            ret_val += start_time + " - " + end_time + " " + event_name + "\n"
+
+        print(ret_val)
+        return ret_val
+
+
+    def createLabel(self, root):
+        global calendarLabel
+        calendarLabel = tkinter.Label(root, bg="black", fg="white", font=("Arial", 20))
+        calendarLabel.place(relx=0.0, rely=0.15, anchor=NW)
+        calendarLabel.after(0, self.createUI)
+
+
+    def createUI(self):
+        currentMinutesAndSeconds = DateAndTime.getMinutesAndSeconds()
+        if (currentMinutesAndSeconds == "00:00" and Calendar.COUNTER == 0) or Calendar.COUNTER == -1:
+            calendarLabel.configure(text=str(Calendar.formatted_data()))
+            Calendar.COUNTER = 1
+        if currentMinutesAndSeconds != "00:00" and Calendar.COUNTER == 1:
+            Calendar.COUNTER = 0
+        calendarLabel.after(1000, self.createUI)
+
 
 
 

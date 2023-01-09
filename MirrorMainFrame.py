@@ -1,5 +1,5 @@
 from tkinter import *
-import DateAndTime, Weather
+import DateAndTime, Weather, Calendar
 
 class MainFrame:
     def __init__(self, master):
@@ -11,12 +11,17 @@ class MainFrame:
         # create the weather label
         self.initWeather()
 
+        self.initCalendar()
+
     # instantiate the time and date
     def initDateAndTime(self):
         DateAndTime.DateAndTime(self, root)
 
     def initWeather(self):
         Weather.Weather(self, root)
+
+    def initCalendar(self):
+        Calendar.Calendar(self, root)
 
     def setLocationData(zipString):
         global zip
