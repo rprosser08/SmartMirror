@@ -14,3 +14,4 @@ Finally, you will run the code from the startScreen.py file and enter in your zi
 
 ## References
 Code for the calendar was taken and modified from https://developers.google.com/calendar/api/quickstart/python (Calendar.py -> main function)
+Weather Icons taken from https://developer.accuweather.com/weather-icons 
