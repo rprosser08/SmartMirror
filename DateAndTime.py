@@ -11,7 +11,7 @@ class DateAndTime:
 
     # Returns the current date
     def getDate():
-        return date.today().strftime("%A, %B %d, %Y")
+        return date.today().strftime("%A, %B %-d, %Y")
 
     # Returns the current time
     def getTime():
