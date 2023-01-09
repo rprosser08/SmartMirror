@@ -121,16 +121,3 @@ class Calendar:
         if currentMinutesAndSeconds != "00:00" and Calendar.COUNTER == 1:
             Calendar.COUNTER = 0
         calendarLabel.after(1000, self.createUI)
-
-
-
-
-
-# PERSONAL NOTES ON HOW I WILL USE THIS
-# Every hour update calendar list and keep end date midnight somehow -> will have to transition to next day though when we get to midnight
-# Currently I could reuse the code as it more or less does what I want
-# Maybe look for a better way to get all the "events" for the day
-# Do I push credentials.json to Github? 
-# Calendar looks possible! 
-# Need to cite where I got the code from -> https://developers.google.com/calendar/api/quickstart/python
-
