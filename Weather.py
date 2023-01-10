@@ -3,17 +3,22 @@ from DateAndTime import DateAndTime
 from datetime import datetime
 from tkinter import *
 import tkinter
+import PIL.Image
+import PIL.ImageTk
 
 
 class Weather:
-    global apiKey, locationSet, key, counter
+    global apiKey, locationSet, key, counter, tkRoot
     locationSet = False
     counter = 0
+    Location_data = ""
+    Current_weather_data = {"WeatherText": "", "WeatherIcon": "0", "Temperature": "0"}
 
     def __init__(self, master, root):
         self.master = master
-        self.createLabel(root)
-        self.createUI()
+        global tkRoot
+        tkRoot = root
+        self.weatherLabel(root)
      
     def getLocation():
         return MirrorMainFrame.MainFrame.getLocationData()
@@ -26,29 +31,29 @@ class Weather:
         URL = "http://dataservice.accuweather.com/locations/v1/postalcodes/US/search?apikey=" + apiKey + "&q=" + zipCode + "&language=en-us&details=true"
         response = requests.get(URL)
         json = response.json()
-        print(json)
+        Weather.Location_data = json
         key = json[0]["Key"]
-        locationSet = True
+        # locationSet = True
         return key
 
     # Returns the city, state, zip code, and country code where the weather data is from
-    def get_users_location(location_data):
-        location_name = location_data[0]['LocalizedName']
-        location_state = location_data[0]['AdministrativeArea']['ID']
-        location_zip = location_data[0]['PrimaryPostalCode']
-        location_country = location_data[0]['AdministrativeArea']['CountryID']
+    def get_users_location():
+        location_name = Weather.Location_data[0]['LocalizedName']
+        location_state = Weather.Location_data[0]['AdministrativeArea']['ID']
+        location_zip = Weather.Location_data[0]['PrimaryPostalCode']
+        location_country = Weather.Location_data[0]['AdministrativeArea']['CountryID']
+        return location_name, location_state, location_zip, location_country
 
-    # Gets the 12 - hourly weather data for the location 
-    def getHourlyWeather():
+
+    def getCurrentWeather():
         global apiKey, key, locationSet
         Weather.setAPIKey()
         if not locationSet:
             Weather.setLocationKey()
-        URL = "http://dataservice.accuweather.com/forecasts/v1/hourly/12hour/" + key + "?apikey=" + apiKey
+        URL = "http://dataservice.accuweather.com/currentconditions/v1/" + key + "?apikey=" + apiKey
         response = requests.get(URL)
         weatherData = response.json()
-        fiveHourData = Weather.formatData(weatherData)
-        return fiveHourData
+        Weather.formatWeather(weatherData)
 
     # Gets the Accuweahter API key from the file "APIKey.txt"
     def setAPIKey():
@@ -56,70 +61,63 @@ class Weather:
         with open("APIKey.txt") as f:
             apiKey = f.read()
 
-    # Stores the first 5 hours of weather data in the formatted data list as individal dictionaries for each hour
-    def formatData(weatherDataList):
-        formattedData = []
+    def formatWeather(weatherData):
+        weather_text = weatherData[0]["WeatherText"]
+        weather_icon = weatherData[0]["WeatherIcon"]
+        temp = int(weatherData[0]["Temperature"]["Imperial"]["Value"])
+        Weather.Current_weather_data["WeatherText"] = weather_text
+        Weather.Current_weather_data["WeatherIcon"] = str(weather_icon)
+        Weather.Current_weather_data["Temperature"] = str(temp)
 
-        # Gets the frist 5 hours of weather data into the correct data structures
-        for i in range(5):
-            # Dictionary to store each data value (Time, Temp, Feel Like Temp, Precipitation Chance)
-            dataDictionary = {}
-
-            # Gets the time from the weather data and formats it to 12-hour clock -> 12:00 AM and stores it in the dictionary
-            weatherTime = weatherDataList[i]["DateTime"]
-            FullTime = weatherTime.split("T")[1]
-            _24HrTime = FullTime.split("-")[0]
-            time_object = datetime.strptime(_24HrTime, "%H:%M:%S").time()
-            time = time_object.strftime("%-I:%M %p")
-            dataDictionary.update({"Time": time})
-
-            # Gets the temperature from the weather data and stores it in the dictionary
-            temp = int(weatherDataList[i]["Temperature"]["Value"])
-            dataDictionary.update({"Temp": str(temp)})
-
-            # Gets the Icon Phrase that describes the weather
-            iconPhrase = weatherDataList[i]["IconPhrase"]
-            dataDictionary.update({"IconPhrase": str(iconPhrase)})
-
-            # Gets the chance of percipitation from the weather data and stores it in the dictionary
-            precipChance = weatherDataList[i]["PrecipitationProbability"]
-            dataDictionary.update({"PrecipChance": str(precipChance)})
-
-            formattedData.append(dataDictionary)
-        
-        return formattedData
-
-    def formattedWweatherString():
+    def current_weather_string():
         degreeSymbol = "\u00B0"
-        weatherData = Weather.getHourlyWeather()
-        hour1 = "\t" + weatherData[0]["Time"] + ": Temp " + weatherData[0]["Temp"] + degreeSymbol + "F\
-            \n\t" + weatherData[0]["IconPhrase"] + "\n\tPrecip " + weatherData[0]["PrecipChance"] + "%\n"
-        hour2 = "\t" + weatherData[1]["Time"] + ": Temp " + weatherData[1]["Temp"] + degreeSymbol + "F\
-            \n\t" + weatherData[1]["IconPhrase"] + "\n\tPrecip " + weatherData[1]["PrecipChance"] + "%\n"
-        hour3 = "\t" + weatherData[2]["Time"] + ": Temp " + weatherData[2]["Temp"] + degreeSymbol + "F\
-            \n\t" + weatherData[2]["IconPhrase"] + "\n\tPrecip " + weatherData[2]["PrecipChance"] + "%\n"
-        hour4 = "\t" + weatherData[3]["Time"] + ": Temp " + weatherData[3]["Temp"] + degreeSymbol + "F\
-            \n\t" + weatherData[3]["IconPhrase"] + "\n\tPrecip " + weatherData[3]["PrecipChance"] + "%\n"
-        hour5 = "\t" + weatherData[4]["Time"] + ": Temp " + weatherData[4]["Temp"] + degreeSymbol + "F\
-            \n\t" + weatherData[4]["IconPhrase"] + "\n\tPrecip " + weatherData[4]["PrecipChance"] + "%\n"
-        
-        retVal = hour1 + hour2 + hour3 + hour4 + hour5
-        return retVal
+        Weather.getCurrentWeather()
+        user_location_data = Weather.get_users_location()
+        ret_val = []
+        temp = Weather.Current_weather_data["Temperature"] + degreeSymbol + "F\n"
+        ret_val.append(temp)
+        data = user_location_data[0] + ", " + user_location_data[1] + ", " + user_location_data[3] + "\n" + Weather.Current_weather_data["WeatherText"]
+        ret_val.append(data)
+        return ret_val
 
-    def createLabel(self, root):
-        global weatherLabel
-        weatherLabel = tkinter.Label(root, bg="black", fg="white", font=("Arial", 25))
-        weatherLabel.place(relx=1.0, rely=0.0, anchor=NE)
-        weatherLabel.after(0, self.createUI)
 
-# NEED TO LOOK INTO WHY THIS DOESN'T UPDATE
+    def weatherLabel(self, root):
+        global weatherCanvas, tkRoot
+        weather_strings = Weather.current_weather_string()
+        temp_string = weather_strings[0]
+        data_string = weather_strings[1]
+        weatherCanvas = tkinter.Canvas(root, bg="black", bd=0, highlightthickness=0, relief="ridge")
+        weatherCanvas.place(relx=0.9, rely=0.075, anchor=CENTER)
+        weatherCanvas.after(0, self.createUI)
+
+
     def createUI(self):
-        global counter
+        global tkRoot, counter, locationSet
         currentMinutesAndSeconds = DateAndTime.getMinutesAndSeconds()
-        if (currentMinutesAndSeconds == "01:00" and counter == 0) or not locationSet:
-            weatherLabel.configure(text=Weather.formattedWweatherString())
+        # Ensures the weather data is only updated once per hour
+        if (currentMinutesAndSeconds == "00:00" and counter == 0) or not locationSet:
+            weather_strings = Weather.current_weather_string()
+            temp_string = weather_strings[0]
+            data_string = weather_strings[1]
+
+            # Prepares the correct weather icon to be displayed
+            weatherIcon_file = "./weatherIcons/" + Weather.Current_weather_data["WeatherIcon"] + ".png"
+            img = tkinter.PhotoImage(file=weatherIcon_file)
+            tkRoot.img = img
+
+            # Update is used to get the current dimensions of the weather canvas 
+            weatherCanvas.update()
+            canvas_width = weatherCanvas.winfo_width()
+            canvas_height = weatherCanvas.winfo_height()
+
+            weatherCanvas.create_image(canvas_width/3 - 20, canvas_height/3, image=img, anchor=E)
+            weatherCanvas.create_text(canvas_width/3, canvas_height/3 + 15, text=temp_string, fill="white", font=("Arial", 25))
+            weatherCanvas.create_text(canvas_width/2, canvas_height/2 + 15, text=data_string, fill="white", font=("Arial", 25))
+
             counter += 1
-        if currentMinutesAndSeconds != "01:00" and counter == 1:
+            locationSet = True
+        else:
             counter = 0
-        weatherLabel.after(1000, self.createUI)
+
+        weatherCanvas.after(1000, self.createUI)
 
