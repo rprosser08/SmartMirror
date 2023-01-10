@@ -1,5 +1,3 @@
-from __future__ import print_function
-
 import datetime
 import os.path
 
@@ -56,14 +54,12 @@ class Calendar:
 
             ret_val = []
             if not events:
-                print('No upcoming events found.')
                 return ret_val
 
             # Prints the start and name of the events
             for event in events:
                 start = event['start'].get('dateTime', event['start'].get('date'))
                 end = event['end'].get('dateTime', event['end'].get('date'))
-                print([start, end, event['summary']])
                 ret_val.append([start, end, event['summary']])
 
             return ret_val
@@ -90,11 +86,12 @@ class Calendar:
 
     # Formats the event data
     def formatted_data():
-        ret_val = "Your Schedule\n"
+        ret_val = "Today's Schedule:\n"
         events_data = Calendar.main()
         
         if len(events_data) == 0:
-            return ""
+            ret_val += "Nothing scheduled for today!"
+            return ret_val
         
         for event in events_data:
             start_time = str(Calendar.time_converter(event[0]))
@@ -102,7 +99,6 @@ class Calendar:
             event_name = event[2]
             ret_val += start_time + " - " + end_time + " " + event_name + "\n"
 
-        print(ret_val)
         return ret_val
 
 
