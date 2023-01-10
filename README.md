@@ -9,7 +9,6 @@ Once you clone this git repository you will need to set a couple of things up. F
 Finally, you will run the code from the startScreen.py file and enter in your zip code on the start screen and press enter.
 
 ## TODO
-- Change over the weather data from the hourly forecast to the current weather
 - Formatting the user screens
 
 ## References
