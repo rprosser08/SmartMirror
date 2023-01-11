@@ -66,7 +66,7 @@ class Weather:
         temp = int(weatherData[0]["Temperature"]["Imperial"]["Value"])
         Weather.Current_weather_data["WeatherText"] = weather_text
         Weather.Current_weather_data["WeatherIcon"] = str(weather_icon)
-        Weather.Current_weather_data["Temperature"] = str(temp + counter)
+        Weather.Current_weather_data["Temperature"] = str(temp)
 
     def current_weather_string():
         degreeSymbol = "\u00B0"
