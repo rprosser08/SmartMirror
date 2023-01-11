@@ -33,7 +33,6 @@ class Weather:
         json = response.json()
         Weather.Location_data = json
         key = json[0]["Key"]
-        # locationSet = True
         return key
 
     # Returns the city, state, zip code, and country code where the weather data is from
@@ -67,7 +66,7 @@ class Weather:
         temp = int(weatherData[0]["Temperature"]["Imperial"]["Value"])
         Weather.Current_weather_data["WeatherText"] = weather_text
         Weather.Current_weather_data["WeatherIcon"] = str(weather_icon)
-        Weather.Current_weather_data["Temperature"] = str(temp)
+        Weather.Current_weather_data["Temperature"] = str(temp + counter)
 
     def current_weather_string():
         degreeSymbol = "\u00B0"
@@ -82,20 +81,17 @@ class Weather:
 
 
     def weatherLabel(self, root):
-        global weatherCanvas, tkRoot
-        weather_strings = Weather.current_weather_string()
-        temp_string = weather_strings[0]
-        data_string = weather_strings[1]
-        weatherCanvas = tkinter.Canvas(root, bg="black", bd=0, highlightthickness=0, relief="ridge")
-        weatherCanvas.place(relx=0.9, rely=0.075, anchor=CENTER)
-        weatherCanvas.after(0, self.createUI)
+        global tkRoot
+        self.weatherCanvas = tkinter.Canvas(root, bg="black", bd=0, highlightthickness=0, relief="ridge")
+        self.weatherCanvas.place(relx=0.9, rely=0.075, anchor=CENTER)
+        self.weatherCanvas.after(0, self.createUI)
 
 
     def createUI(self):
         global tkRoot, counter, locationSet
         currentMinutesAndSeconds = DateAndTime.getMinutesAndSeconds()
-        # Ensures the weather data is only updated once per hour
-        if (currentMinutesAndSeconds == "00:00" and counter == 0) or not locationSet:
+        # Sets the data for the first time around
+        if not locationSet:
             weather_strings = Weather.current_weather_string()
             temp_string = weather_strings[0]
             data_string = weather_strings[1]
@@ -106,18 +102,36 @@ class Weather:
             tkRoot.img = img
 
             # Update is used to get the current dimensions of the weather canvas 
-            weatherCanvas.update()
-            canvas_width = weatherCanvas.winfo_width()
-            canvas_height = weatherCanvas.winfo_height()
+            self.weatherCanvas.update()
+            canvas_width = self.weatherCanvas.winfo_width()
+            canvas_height = self.weatherCanvas.winfo_height()
 
-            weatherCanvas.create_image(canvas_width/3 - 20, canvas_height/3, image=img, anchor=E)
-            weatherCanvas.create_text(canvas_width/3, canvas_height/3 + 15, text=temp_string, fill="white", font=("Arial", 25))
-            weatherCanvas.create_text(canvas_width/2, canvas_height/2 + 15, text=data_string, fill="white", font=("Arial", 25))
+            self.image_id = self.weatherCanvas.create_image(canvas_width/3 - 20, canvas_height/3, image=img, anchor=E)
+            self.text1_id = self.weatherCanvas.create_text(canvas_width/3, canvas_height/3 + 15, text=temp_string, fill="white", font=("Arial", 25))
+            self.text2_id = self.weatherCanvas.create_text(canvas_width/2, canvas_height/2 + 15, text=data_string, fill="white", font=("Arial", 25))
+
+            locationSet = True
+            counter += 1
+
+        # Ensures the weather data is only updated once per hour
+        elif (currentMinutesAndSeconds == "00:00" and counter == 0):
+            weather_strings = Weather.current_weather_string()
+            temp_string = weather_strings[0]
+            data_string = weather_strings[1]
+
+            # Prepares the correct weather icon to be displayed
+            weatherIcon_file = "./weatherIcons/" + Weather.Current_weather_data["WeatherIcon"] + ".png"
+            img = tkinter.PhotoImage(file=weatherIcon_file)
+            tkRoot.img = img
+
+            # Updates the image and text objects in the weatherCanvas
+            self.weatherCanvas.itemconfig(self.image_id, image=img)
+            self.weatherCanvas.itemconfig(self.text1_id, text=temp_string)
+            self.weatherCanvas.itemconfig(self.text2_id, text=data_string)
 
             counter += 1
-            locationSet = True
         else:
             counter = 0
 
-        weatherCanvas.after(1000, self.createUI)
+        self.weatherCanvas.after(1000, self.createUI)
 
