@@ -6,7 +6,7 @@ This code is for the GUI component of a smart mirror. It will include the curren
 ## Instructions
 Once you clone this git repository you will need to set a couple of things up. Firstly, you will need to create a free account with Accuweather to use their API. Once you have recieved an API key you can enter it into the provided "APIKeyExample.txt" file, which you will want to rename to "APIKey.txt". 
 
-Then, you will want to make sure you have all of the correct packages installed. You can do so with the following commands.
+Then, you will want to make sure you have all of the correct packages installed. You can do so with the following commands. <br />
 sudo pip3 install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib <br />
 sudo pip3 install pillow --upgrade <br />
 
